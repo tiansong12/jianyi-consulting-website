@@ -741,6 +741,96 @@ nav a:hover {
   border-bottom: 1px solid #c4beb0;
   font-size: 12px;
 }
+.track-group {
+  margin-top: 62px;
+}
+.track-group:first-of-type {
+  margin-top: 46px;
+}
+.track-head {
+  display: flex;
+  gap: 24px;
+  align-items: stretch;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--ink);
+}
+.track-key {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 104px;
+  background: var(--green);
+  color: white;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 23px;
+  letter-spacing: .1em;
+}
+.track-en {
+  color: var(--accent);
+  font: 700 10px/1.3 Arial, sans-serif;
+  letter-spacing: .16em;
+}
+.track-lead {
+  margin-top: 11px;
+  max-width: 820px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.9;
+}
+.track-cases {
+  margin-top: 28px;
+  display: grid;
+  gap: 30px;
+}
+.case-item {
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid #c4beb0;
+  background: rgba(255,255,255,.42);
+}
+.case-item .case-heading {
+  padding: 30px 32px 26px;
+  border-right: 1px solid #c4beb0;
+  border-bottom: 1px solid #c4beb0;
+}
+.case-item .case-heading h3 {
+  margin: 24px 0 0;
+  font-size: clamp(24px, 2vw, 33px);
+}
+.case-item .case-detail {
+  grid-template-columns: 1fr 1fr;
+}
+.case-block {
+  min-height: 138px;
+  padding: 18px;
+  border-right: 1px solid #c4beb0;
+  border-bottom: 1px solid #c4beb0;
+}
+.case-knots {
+  background: rgba(217,95,50,.06);
+}
+.case-knots li {
+  line-height: 1.85;
+}
+.case-result {
+  background: var(--green);
+}
+.case-result span {
+  color: rgba(255,255,255,.62);
+}
+.case-result p {
+  color: white;
+  font-size: 12.5px;
+  line-height: 1.9;
+}
+.case-note {
+  margin-top: 44px;
+  padding-top: 22px;
+  border-top: 1px solid #c4beb0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.95;
+}
 .story-section {
   background: var(--white);
 }
@@ -978,6 +1068,104 @@ nav a:hover {
   color: #c3d4cc;
   font-size: 12px;
 }
+.link-block {
+  margin-top: 30px;
+  padding: 30px 28px;
+  background: var(--green-deep);
+  color: white;
+}
+.link-block h4 {
+  margin: 14px 0 0;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: clamp(24px, 2.4vw, 34px);
+  line-height: 1.35;
+}
+.link-block > p {
+  margin-top: 14px;
+  max-width: 920px;
+  color: #c3d4cc;
+  font-size: 13px;
+  line-height: 1.85;
+}
+.break-chain {
+  margin-top: 24px;
+  border-top: 1px solid rgba(255,255,255,.28);
+}
+.break-chain > div {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  column-gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255,255,255,.2);
+}
+.break-chain span {
+  grid-row: 1 / 3;
+  color: #f18a62;
+  font: 10px/1.6 Arial, sans-serif;
+}
+.break-chain strong {
+  font-size: 15px;
+}
+.break-chain p {
+  margin-top: 6px;
+  color: #b9cdc4;
+  font-size: 12px;
+  line-height: 1.75;
+}
+.chain-note {
+  margin-top: 18px;
+  color: #c3d4cc;
+  font-size: 12.5px;
+  line-height: 1.85;
+}
+.scene-block, .voucher-block {
+  margin-top: 36px;
+}
+.scene-block .story-kicker, .voucher-block .story-kicker {
+  margin-bottom: 16px;
+}
+.scene-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--line);
+}
+.scene-grid span {
+  padding: 14px 16px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  color: #3e4944;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.scene-note, .voucher-note {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.9;
+}
+.voucher-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--line);
+}
+.voucher-grid > div {
+  padding: 16px 18px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.voucher-grid strong {
+  display: block;
+  font-size: 13px;
+}
+.voucher-grid span {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.7;
+}
 .story-shift {
   margin-top: 40px;
 }
@@ -1124,6 +1312,15 @@ nav a:hover {
   border-top: 1px solid var(--line);
   color: var(--green);
   font-size: 12px;
+}
+.method-artifacts {
+  max-width: 960px;
+  margin-top: 42px;
+  padding-top: 24px;
+  border-top: 1px solid var(--ink);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.95;
 }
 .role-frame {
   margin-top: 30px;
@@ -1578,6 +1775,9 @@ footer > p, footer > a {
   .link-flow {
     grid-template-columns: 1fr 1fr;
   }
+  .scene-grid, .voucher-grid {
+    grid-template-columns: 1fr 1fr;
+  }
   .model-grid, .artifact-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -1688,6 +1888,26 @@ footer > p, footer > a {
     font-size: 30px;
   }
   .case-facts {
+    grid-template-columns: 1fr;
+  }
+  .track-head {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .track-key {
+    width: 100%;
+    padding: 13px 0;
+  }
+  .case-item .case-heading {
+    padding: 24px 20px;
+  }
+  .case-item .case-heading h3 {
+    font-size: 28px;
+  }
+  .case-block {
+    min-height: auto;
+  }
+  .scene-grid, .voucher-grid {
     grid-template-columns: 1fr;
   }
   .story-prologue, .story-epilogue {

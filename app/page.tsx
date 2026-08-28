@@ -42,10 +42,12 @@ const services = [
   },
 ];
 
-const artifacts = [
-  ['01', '经营问题地图', '将销售、毛利、库存、门店、组织与系统问题放进同一张管理关系图，明确优先级、责任人与验证指标。'],
-  ['02', '业务与数据蓝图', '明确业务对象、流程、角色、状态、权限和数据口径，让需求可以进入产品和项目。'],
-  ['03', '实施与复盘路线图', '把方案拆成责任、任务、阶段门、验收、复盘和能力移交的运行节奏。'],
+const method = [
+  ['01', '识别课题', '把现场现象转成管理层需要回答的问题。', '课题清单'],
+  ['02', '统一事实', '结合访谈、流程和数据建立共同认知。', '现状地图'],
+  ['03', '设计方案', '明确业务规则、目标流程和取舍原则。', '目标方案'],
+  ['04', '组织实施', '把方案拆成责任、任务、决策和验收。', '项目机制'],
+  ['05', '验证改进', '用经营动作、系统状态和指标持续复盘。', '改进闭环'],
 ];
 
 const packages = [
@@ -76,55 +78,116 @@ const packages = [
   },
 ];
 
-const cases = [
+const caseTracks = [
   {
-    no: 'CASE 01',
-    sector: '商贸零售集团 / 门店进销存实时管理',
-    title: '看不见的门店',
-    challenge: '总部每月只看得到发了多少货、收了多少钱；门店卖了什么、还剩多少，要等一两个月甚至季度盘点才能倒推。',
-    role: '数据口径梳理与系统实施组织',
-    moves: ['建立打称码、组合码、成分码的 1:N 映射', '门店销售数据直连自动回流', '梳理供应商直送、退货、调拨、报损等场景'],
-    value: '经营可见性从一两个月缩短到 1 至 3 天，管理颗粒度下沉到打称码与品类。',
-    facts: ['1 至 3 天可见', '编码 1:N 映射', '打称码级明细'],
+    track: '看得见',
+    en: 'VISIBILITY',
+    logic: '经营可见性',
+    lead: '先让门店的业务数据回到总部。数据不到位，经营讨论只能停留在经验层面。',
+    items: [
+      {
+        no: 'CASE 01 · 章一',
+        sector: '区域商贸零售集团 / 商超专柜业态',
+        title: '从月度盲区到 1 至 3 天可见',
+        challenge: '总部每月只看得到发了多少货、收了多少钱；门店卖了什么、还剩多少，要等一两个月甚至季度盘点才能倒推。',
+        knots: [
+          '同一件商品在系统里有三个身份：超市打称码、企业销售组合码、订货成分码，一个销售编码可能映射多个订货编码',
+          '八类真实场景无法只靠增加一个接口解决：供应商直送、门店退货、门店调拨、试吃报损、盘点盈亏、赠品只记数量、有库存无销售、外部有销售码内部找不到商品',
+        ],
+        moves: ['建立打称码、组合码、成分码的 1:N 映射关系', '门店销售数据直连自动回流，不再人工转述', '逐类场景定义谁发起、谁审核、谁执行，产生什么单据、库存如何变化'],
+        result: '经营可见性从一两个月缩短到 1 至 3 天，管理颗粒度下沉到打称码与品类；数据回流不再依赖人工报数与解释。',
+        facts: ['1 至 3 天可见', '编码 1:N 映射', '八类场景归位'],
+      },
+    ],
   },
   {
-    no: 'CASE 02',
-    sector: '商贸零售集团 / 门店利润表与成本核算',
-    title: '算不清的利润',
-    challenge: '销售收入有了，成本没有随销售自动结转；损耗、商场扣费、供应链与总部费用散落在不同系统，无法归集到门店。',
-    role: '业财规则设计与核算机制落地',
-    moves: ['销售数据形成内部收入小票', '销售成本随销售自动结转', '损耗、商场扣费归集到门店', '供应链与总部费用按规则分摊'],
-    value: '每张业务单据按规则生成财务凭证，门店利润表每月 5 日出具，盈亏第一次有了完整、可追溯的答案。',
-    facts: ['四道连接', '每月 5 日出表', '门店级利润'],
+    track: '算得清',
+    en: 'PROFIT',
+    logic: '业财一体',
+    lead: '数据回来之后，还要让每一笔业务都能算出结果。利润不是月末拼出来的，而是业务发生时生成的。',
+    items: [
+      {
+        no: 'CASE 01 · 章二',
+        sector: '同一客户纵深 / 门店利润表与成本核算',
+        title: '从回款大数到门店利润表',
+        challenge: '老板能看到钱回来了，却很难回答一家店到底赚了多少：收入在超市对账单，成本在商贸系统，费用散落在扣款明细、工资表和财务科目。',
+        knots: [
+          '专柜交易发生在超市的收银和称重体系里，企业内部没有一张能按门店、按日、按 SKU 识别收入的销售小票',
+          '连锁断点：没有小票就无法对应库存商品，无法对应库存就无法自动结转成本；没有收入与成本，门店利润就失去计算基础',
+          '商场扣费只出现在结算单，与门店日常经营数据相互分离；供应链与总部费用全部留在总部，门店利润看起来虚高',
+        ],
+        moves: ['销售数据按日导入生成企业内部收入小票', '调入单带成本、售出即结转，销售与成本落在同一经营期间', '盘点盈亏与商场扣费归集到门店，固定费用先计提后冲抵', '供应链按调入件数、总部按后台成本确定分摊规则'],
+        result: '每张业务单据按规则生成财务凭证，门店利润表每月 5 日出具；销售额高的门店未必贡献利润，经营质量第一次可以被比较。',
+        facts: ['四道连接', '每月 5 日出表', '门店级利润'],
+      },
+    ],
   },
   {
-    no: 'CASE 03',
-    sector: '区域连锁超市 / 品类经营与试点调改',
-    title: '用一个门店试点，把品类方法变成团队共同语言',
-    challenge: '商品分类、品类角色和绩效指标缺少统一口径，调改经验难以复制到门店日常经营。',
-    role: '品类咨询与试点设计',
-    moves: ['设计品类结构树和分类规则', '选择门店与功能分类开展试点', '建立 KPI、调改方案和双周复盘机制'],
-    value: '通过小范围试点，把分类、指标、动作和复盘连在一起，为后续验证与推广建立可重复的方法。',
-    facts: ['1 家试点门店', '2 个功能分类', '4 轮双周复盘'],
+    track: '调得动',
+    en: 'CATEGORY',
+    logic: '品类经营',
+    lead: '看得见、算得清之后，经营动作才有依据。把数据转成门店可以执行、可以复盘的调整。',
+    items: [
+      {
+        no: 'CASE 02',
+        sector: '区域连锁超市 / 门店经营',
+        title: '用一个门店试点，把品类方法变成团队共同语言',
+        challenge: '商品分类、品类角色和绩效指标缺少统一口径，调改经验停留在少数人手里，难以复制到门店日常经营。',
+        knots: [
+          '同一类商品在不同部门的分类口径不同，销售、毛利和库存无法放在同一张表里比较',
+          '调改动作与结果之间没有固定的复盘节奏，效果好坏说不清原因',
+        ],
+        moves: ['设计品类结构树和分类规则', '选择门店与功能分类开展试点', '建立 KPI、调改方案和双周复盘机制'],
+        result: '通过小范围试点，把分类、指标、动作和复盘连在一起，为后续验证与推广建立可重复的方法。',
+        facts: ['1 家试点门店', '2 个功能分类', '4 轮双周复盘'],
+      },
+    ],
   },
   {
-    no: 'CASE 04',
-    sector: '商业综合体 / 总部与项目 IT 规划',
-    title: '把总部管理、项目运营与筹开需求放进一张蓝图',
-    challenge: '招商租赁、商户运营、物业、会员、预算、BI 与办公协同跨越总部和多个项目，系统边界复杂。',
-    role: 'IT 需求规划',
-    moves: ['划分总部与项目能力边界', '梳理模块、审批权限和多项目管理', '纳入筹开部署、培训、运维和验收'],
-    value: '形成覆盖管理、运营与筹开的系统需求框架，让系统建设围绕真实管理场景展开。',
+    track: '建得起',
+    en: 'SYSTEM',
+    logic: '系统落地',
+    lead: '经营规则要真正跑起来，最终要落到系统边界、产品定义与项目机制上。',
+    items: [
+      {
+        no: 'CASE 03',
+        sector: '商业综合体 / 总部与项目 IT 规划',
+        title: '把总部管理、项目运营与筹开需求放进一张蓝图',
+        challenge: '招商租赁、商户运营、物业、会员、预算、BI 与办公协同跨越总部和多个项目，系统边界复杂。',
+        knots: [
+          '总部要统一管理口径，项目要保留运营差异，两类需求在同一套系统里相互拉扯',
+          '筹开部署、培训、运维和验收常被排除在系统需求之外，上线后才临时补',
+        ],
+        moves: ['划分总部与项目能力边界', '梳理模块、审批权限和多项目管理', '把筹开部署、培训、运维和验收纳入需求'],
+        result: '形成覆盖管理、运营与筹开的系统需求框架，让系统建设围绕真实管理场景展开。',
+        facts: ['总部 / 项目双层', '筹开纳入需求'],
+      },
+      {
+        no: 'CASE 04',
+        sector: '复杂业务系统 / 产品设计',
+        title: '把专业流程转成可开发、可测试的产品定义',
+        challenge: '测试计划、项目、任务投放、实验执行、审核与报告相互关联，角色、状态和异常边界复杂。',
+        knots: [
+          '业务专家、设计、开发和测试对同一术语理解不同，需求停留在口头解释',
+          '异常场景没有定义，开发只能按正常路径实现，上线后不断返工',
+        ],
+        moves: ['统一术语、角色与端到端流程', '设计状态机、权限和数据模型', '用场景测试校验交互与异常规则'],
+        result: '让业务、设计、开发和测试围绕同一份产品定义协作，减少依赖口头解释的模糊空间。',
+        facts: ['状态机 + 权限模型', '场景测试'],
+      },
+    ],
   },
-  {
-    no: 'CASE 05',
-    sector: '复杂业务系统 / 产品设计',
-    title: '把专业实验流程转成可开发、可测试的产品定义',
-    challenge: '测试计划、项目、任务投放、实验执行、审核与报告相互关联，角色、状态和异常边界复杂。',
-    role: '业务研究与产品定义',
-    moves: ['统一术语、角色与端到端流程', '设计状态机、权限和数据模型', '用场景测试校验交互与异常规则'],
-    value: '让业务、设计、开发和测试围绕同一份产品定义协作，减少依赖口头解释的模糊空间。',
-  },
+];
+
+const chapterOneScenes = [
+  '供应商直送门店',
+  '门店向仓库退货',
+  '门店之间调拨',
+  '商品试吃和报损',
+  '盘点产生的库存盈亏',
+  '赠品只记录数量',
+  '有库存却长期没有销售',
+  '外部有销售码、内部找不到商品',
 ];
 
 const storyShifts = [
@@ -136,18 +199,25 @@ const storyShifts = [
 ];
 
 const storyLinks = [
-  ['1', '销售成票', '销售数据自动形成收入小票'],
-  ['2', '成本结转', '销售成本随销售自动结转'],
-  ['3', '损耗归集', '损耗与商场扣费归集到门店'],
-  ['4', '费用分摊', '供应链与总部费用按规则分摊'],
+  ['1', '销售成票', '销售数据按日导入，形成企业自己的收入小票'],
+  ['2', '成本结转', '调入单带成本，售出即结转，库存成本同步减少'],
+  ['3', '损耗归集', '盘盈盘亏、报损与商场扣费归集到对应门店'],
+  ['4', '费用分摊', '供应链按调入件数、总部按后台成本分摊'],
 ];
 
-const method = [
-  ['01', '识别课题', '把现场现象转成管理层需要回答的问题。', '课题清单'],
-  ['02', '统一事实', '结合访谈、流程和数据建立共同认知。', '现状地图'],
-  ['03', '设计方案', '明确业务规则、目标流程和取舍原则。', '目标方案'],
-  ['04', '组织实施', '把方案拆成责任、任务、决策和验收。', '项目机制'],
-  ['05', '验证改进', '用经营动作、系统状态和指标持续复盘。', '改进闭环'],
+const profitBreak = [
+  ['没有内部销售小票', '交易发生在超市收银体系，企业内部无法按门店、按日、按 SKU 识别收入'],
+  ['无法对应库存商品', '销售数量与库存商品对不上，成本不能随销售自动结转'],
+  ['利润失去计算基础', '收入与成本不在同一经营期间，门店盈亏只能靠月末人工拼凑'],
+];
+
+const vouchers = [
+  ['供应商收货', '应付账款 · 库存商品'],
+  ['门店销售', '应收账款 · 主营业务收入与成本 · 库存商品'],
+  ['盘点与库存调整', '库存商品 · 损益'],
+  ['收款与付款', '应收应付 · 银行现金'],
+  ['超市扣费', '销售费用 · 管理费用'],
+  ['门店之间调拨', '过渡科目保持两端库存一致'],
 ];
 
 const gates = [
@@ -192,8 +262,8 @@ export default function Home() {
         <nav aria-label="主要导航">
           <a href="#services">服务</a>
           <a href="#cases">项目实践</a>
+          <a href="#story">主案例</a>
           <a href="#method">工作方法</a>
-          <a href="#gates">项目治理</a>
           <a href="#about">关于简益</a>
           <a className="nav-cta" href="#whitepaper">下载白皮书</a>
         </nav>
@@ -291,20 +361,17 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section section-white" id="artifacts">
+      <section className="section section-white" id="method">
         <div className="section-intro two-col">
-          <div><p className="section-code">05 / WORK ARTIFACT</p><h2>报告之外，留下可运行的机制。</h2></div>
-          <p>项目结束时不只交付文档，而是交付企业可以继续使用的工作底稿、规则与节奏。</p>
+          <div><p className="section-code">05 / HOW WE WORK</p><h2>咨询的价值，在于把判断组织成行动。</h2></div>
+          <p>方法适用于经营改善、IT 规划、项目治理和复杂产品定义，每个项目会根据企业成熟度、约束条件与决策节奏进行裁剪。</p>
         </div>
-        <div className="artifact-grid">
-          {artifacts.map(([no, name, desc]) => (
-            <article key={no}>
-              <span>WORK ARTIFACT / {no}</span>
-              <h3>{name}</h3>
-              <p>{desc}</p>
-            </article>
+        <div className="method-flow">
+          {method.map(([no, title, desc, output]) => (
+            <article key={no}><span>{no}</span><h3>{title}</h3><p>{desc}</p><strong>{output}</strong></article>
           ))}
         </div>
+        <p className="method-artifacts">每一步都留下可以继续使用的东西：经营问题地图、业务与数据蓝图，以及把责任、阶段门、验收和能力移交串起来的实施路线图。项目结束时，企业拿走的不只是报告，而是自己可以运行的机制。</p>
       </section>
 
       <section className="section" id="packages">
@@ -327,29 +394,45 @@ export default function Home() {
 
       <section className="section case-section" id="cases">
         <div className="section-intro two-col">
-          <div><p className="section-code">07 / SELECTED WORK</p><h2>以业务细节，说明工作深度。</h2></div>
-          <p>所有案例均已匿名处理，展示课题、工作机制、关键动作与形成的管理基础；不呈现客户名称及可识别信息。</p>
+          <div><p className="section-code">07 / SELECTED WORK</p><h2>沿着零售经营主线，看四类代表性工作。</h2></div>
+          <p>案例按经营逻辑归类：先看得见，才算得清，再调得动，最终建得起。所有案例均已匿名处理，不呈现客户名称及可识别信息。</p>
         </div>
-        <div className="case-list">
-          {cases.map((item, index) => (
-            <article className={index < 2 ? 'case case-large' : 'case'} key={item.no}>
-              <div className="case-heading"><span>{item.no}</span><p>{item.sector}</p><h3>{item.title}</h3></div>
-              <div className="case-detail">
-                <div><span>客户课题</span><p>{item.challenge}</p></div>
-                <div><span>简益角色</span><p>{item.role}</p></div>
-                <div><span>关键工作</span><ul>{item.moves.map((move) => <li key={move}>{move}</li>)}</ul></div>
-                <div className="case-value"><span>形成价值</span><p>{item.value}</p></div>
+        {caseTracks.map((track) => (
+          <div className="track-group" key={track.track}>
+            <div className="track-head">
+              <span className="track-key">{track.track}</span>
+              <div>
+                <p className="track-en">{track.en} / {track.logic}</p>
+                <p className="track-lead">{track.lead}</p>
               </div>
-              {item.facts && <div className="case-facts">{item.facts.map((fact) => <strong key={fact}>{fact}</strong>)}</div>}
-            </article>
-          ))}
-        </div>
+            </div>
+            <div className="track-cases">
+              {track.items.map((item) => (
+                <article className="case-item" key={item.no}>
+                  <div className="case-heading">
+                    <span>{item.no}</span>
+                    <p>{item.sector}</p>
+                    <h3>{item.title}</h3>
+                  </div>
+                  <div className="case-detail">
+                    <div className="case-block"><span>客户课题</span><p>{item.challenge}</p></div>
+                    <div className="case-block case-knots"><span>现场卡点</span><ul>{item.knots.map((knot) => <li key={knot}>{knot}</li>)}</ul></div>
+                    <div className="case-block"><span>我们的做法</span><ul>{item.moves.map((move) => <li key={move}>{move}</li>)}</ul></div>
+                    <div className="case-block case-result"><span>工作成果</span><p>{item.result}</p></div>
+                  </div>
+                  {item.facts && <div className="case-facts">{item.facts.map((fact) => <strong key={fact}>{fact}</strong>)}</div>}
+                </article>
+              ))}
+            </div>
+          </div>
+        ))}
+        <p className="case-note">CASE 01 的两个课题来自同一家客户，是连续推进的两个阶段——完整过程见下一节。</p>
       </section>
 
       <section className="section story-section" id="story">
         <div className="section-intro two-col">
-          <div><p className="section-code">CASE 01 展开 / 一家商贸零售企业的数字化突围</p><h2>看不见的门店，算不清的利润。</h2></div>
-          <p>这不是一家企业的特例。门店看不见、利润算不清，是商贸零售行业最普遍的两个共性问题。</p>
+          <div><p className="section-code">08 / DEEP DIVE · CASE 01</p><h2>看不见的门店，算不清的利润。</h2></div>
+          <p>同一家区域商贸零售集团连续推进的两个阶段，也是商贸零售行业最普遍的两个共性问题。</p>
         </div>
 
         <div className="story-prologue">
@@ -382,9 +465,9 @@ export default function Home() {
 
         <article className="story-chapter">
           <div className="chapter-head">
-            <p className="story-kicker">突破一 / BREAKTHROUGH ONE</p>
+            <p className="story-kicker">章一 / VISIBILITY</p>
             <h3>让数据自己流回总部。</h3>
-            <p className="chapter-lead">建立编码映射体系，贯通打称码、内部码与商品码；门店数据直连自动回流，告别人工报数。</p>
+            <p className="chapter-lead">这看起来像一个数据采集问题。真正进入项目后，团队发现自己走进了一座编码迷宫。</p>
           </div>
           <div className="chapter-split">
             <div className="chapter-pains">
@@ -404,6 +487,15 @@ export default function Home() {
               </div>
             </div>
           </div>
+          <div className="scene-block">
+            <p className="story-kicker">真实场景 / REAL SCENES —— 无法只靠一个接口解决</p>
+            <div className="scene-grid">
+              {chapterOneScenes.map((scene) => (
+                <span key={scene}>{scene}</span>
+              ))}
+            </div>
+            <p className="scene-note">每一类业务都要重新回答：谁发起、谁审核、谁执行；产生什么单据；库存如何变化；出现异常以后由谁处理。</p>
+          </div>
           <div className="story-shift">
             <p className="story-kicker">转变 / TRANSFORMATION —— 管理颗粒度的质变</p>
             <div className="shift-table">
@@ -421,30 +513,49 @@ export default function Home() {
 
         <article className="story-chapter">
           <div className="chapter-head">
-            <p className="story-kicker">突破二 / BREAKTHROUGH TWO</p>
+            <p className="story-kicker">章二 / PROFIT</p>
             <h3>四道连接，算清每一家店。</h3>
-            <p className="chapter-lead">把业务数据与财务核算之间断裂的环节逐一接通，让利润不再依赖人工匹配与分摊。</p>
+            <p className="chapter-lead">每个月结束后，老板都会问一个最基本的问题：这家门店，到底赚了多少钱？</p>
           </div>
           <div className="chapter-split">
             <div className="chapter-pains">
-              <h4>三个断点</h4>
-              <p><strong>成本靠手工结转</strong>收入能看到，成本没有随销售同步</p>
-              <p><strong>损耗与费用散落各处</strong>无法归集到具体门店</p>
-              <p><strong>费用没有分摊规则</strong>供应链与总部费用缺乏分摊依据</p>
+              <h4>难点藏在一张不存在的销售小票里</h4>
+              <p><strong>交易发生在别人的系统</strong>门店开在大型超市内，顾客购买发生在超市的收银和称重体系</p>
+              <p><strong>企业自己没有销售小票</strong>看不到按门店、按日、按 SKU 识别的收入，只知道发了多少货、收回多少钱</p>
+              <p><strong>利润失去计算基础</strong>无法把“商品卖出”这件事转换成自己的业务收入和销售成本</p>
             </div>
             <div className="chapter-break">
-              <p className="story-kicker">关键动作 / ACTIONS</p>
-              <h4>让每一张业务单据说财务语言。</h4>
-              <p>门店经营利润 = 销售收入 − 销售成本 − 库存损耗 − 商场费用 − 供应链费用 − 总部费用。让每一项都有来源、时间、责任人和核算对象。</p>
-              <div className="link-flow">
-                {storyLinks.map(([no, name, desc]) => (
-                  <div key={no}><span>{no}</span><strong>{name}</strong><p>{desc}</p></div>
+              <p className="story-kicker">连锁断点 / CHAIN BREAK</p>
+              <h4>一环缺失，后面全部算不出来。</h4>
+              <div className="break-chain">
+                {profitBreak.map(([title, desc], index) => (
+                  <div key={title}><span>{index + 1}</span><strong>{title}</strong><p>{desc}</p></div>
                 ))}
               </div>
-              <div className="link-result"><span>=</span><strong>门店利润表</strong><p>每月 5 日出具</p></div>
+              <p className="chain-note">收入、成本和费用像几条各自流动的河流，缺少一套规则把它们汇入同一张门店利润表。</p>
             </div>
           </div>
-          <p className="story-conclusion">业务单据按规则自动生成财务凭证，从“财务结账”走向“经营核算”——每一家门店的盈亏，第一次有了完整、可追溯的答案。</p>
+          <div className="link-block">
+            <p className="story-kicker">关键动作 / ACTIONS —— 四道连接</p>
+            <h4>让每一张业务单据说财务语言。</h4>
+            <p>门店经营利润 = 销售收入 − 销售成本 − 库存损耗 − 商场费用 − 供应链费用 − 总部费用。让每一项都有来源、时间、责任人和核算对象。</p>
+            <div className="link-flow">
+              {storyLinks.map(([no, name, desc]) => (
+                <div key={no}><span>{no}</span><strong>{name}</strong><p>{desc}</p></div>
+              ))}
+            </div>
+            <div className="link-result"><span>=</span><strong>门店利润表</strong><p>每月 5 日出具</p></div>
+          </div>
+          <div className="voucher-block">
+            <p className="story-kicker">业务单据 → 财务凭证 / VOUCHER MAPPING</p>
+            <div className="voucher-grid">
+              {vouchers.map(([doc, account]) => (
+                <div key={doc}><strong>{doc}</strong><span>{account}</span></div>
+              ))}
+            </div>
+            <p className="voucher-note">财务核算由此从“月末寻找数据”，逐步转向“业务发生时生成核算依据”。</p>
+          </div>
+          <p className="story-conclusion">销售额很高的门店，可能同时占用更多配送资源、承担更高商场扣费；毛利率不错的门店，也可能因为损耗或固定费用过高而没有真实利润——利润表开始揭示收入大数背后真正的经营质量。</p>
         </article>
 
         <div className="story-epilogue">
@@ -452,23 +563,6 @@ export default function Home() {
           <h3>从人治到流程，从经验到数据。</h3>
           <p>当门店的销售数据每天自动回流，当每家门店的利润表按时出具，经营决策便不再依赖某个人的经验与记忆，而是建立在可追溯、可复用的流程与数据之上。</p>
           <strong>这不是终点，而是一家零售企业从“小农经济”走向工业化经营的起点。</strong>
-        </div>
-      </section>
-
-      <section className="section section-white" id="method">
-        <div className="section-intro two-col">
-          <div><p className="section-code">08 / HOW WE WORK</p><h2>咨询的价值，在于把判断组织成行动。</h2></div>
-          <p>方法适用于经营改善、IT 规划、项目治理和复杂产品定义，每个项目会根据企业成熟度、约束条件与决策节奏进行裁剪。</p>
-        </div>
-        <div className="method-flow">
-          {method.map(([no, title, desc, output]) => (
-            <article key={no}><span>{no}</span><h3>{title}</h3><p>{desc}</p><strong>{output}</strong></article>
-          ))}
-        </div>
-        <div className="role-frame">
-          <div><span>简益负责</span><p>诊断、框架、方案、项目组织、问题推动、验收设计与方法转移。</p></div>
-          <div><span>客户负责</span><p>明确负责人，开放必要信息，组织业务决策，完成约定的数据与现场动作。</p></div>
-          <div><span>共同确认</span><p>关键流程是否运行、责任是否清楚、系统与数据是否支持新的管理方式。</p></div>
         </div>
       </section>
 
@@ -529,6 +623,11 @@ export default function Home() {
               <p className="coordination-jy">{jianyi}</p>
             </div>
           ))}
+        </div>
+        <div className="role-frame">
+          <div><span>简益负责</span><p>诊断、框架、方案、项目组织、问题推动、验收设计与方法转移。</p></div>
+          <div><span>客户负责</span><p>明确负责人，开放必要信息，组织业务决策，完成约定的数据与现场动作。</p></div>
+          <div><span>共同确认</span><p>关键流程是否运行、责任是否清楚、系统与数据是否支持新的管理方式。</p></div>
         </div>
       </section>
 
