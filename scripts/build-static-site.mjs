@@ -24,14 +24,17 @@ await build({
 await import(out);
 fs.rmSync(out, { force: true });
 
-// 2) 复制已编译好的 CSS（来自 vinext build，保证视觉一致）
-const cssDir = path.join(root, 'dist', 'client', '_next', 'static', 'css');
-const cssFiles = fs.readdirSync(cssDir).filter((f) => f.endsWith('.css'));
-if (cssFiles.length === 0) {
-  throw new Error('未找到编译后的 CSS，请先运行 npm run build');
-}
-fs.copyFileSync(path.join(cssDir, cssFiles[0]), path.join(docs, 'style.css'));
-console.log('[static] copied style.css');
+// 2) 直接用 PostCSS + Tailwind 编译 app/globals.css
+//    不依赖 vinext build：更快，也不会触发 dist 目录的批量清理
+const postcss = (await import('postcss')).default;
+const tailwindcss = (await import('@tailwindcss/postcss')).default;
+const cssPath = path.join(root, 'app', 'globals.css');
+const compiled = await postcss([tailwindcss()]).process(
+  fs.readFileSync(cssPath, 'utf8'),
+  { from: cssPath }
+);
+fs.writeFileSync(path.join(docs, 'style.css'), compiled.css);
+console.log('[static] compiled style.css (' + compiled.css.length + ' bytes)');
 
 // 3) 复制资源：OG 图 + 白皮书 PDF
 fs.copyFileSync(path.join(root, 'public', 'og.png'), path.join(docs, 'og.png'));
