@@ -2,26 +2,26 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: '简益咨询｜零售企业复杂经营与数字化项目的甲方顾问',
-  description: '专注零售与商贸企业的经营咨询、IT规划、项目管理与产品设计，让经营判断、系统方案与项目执行站在同一张图上。',
+  title: '简益主理人工作档案',
+  description: '记录简益主理人在零售、数字化、系统建设与 AI 应用中的实践、方法与阶段性判断。',
   openGraph: {
     type: 'website',
     locale: 'zh_CN',
-    title: '简益咨询｜让经营判断、系统方案与项目执行站在同一张图上',
-    description: '零售经营咨询、IT规划、项目管理与产品设计。',
+    title: '简益主理人工作档案',
+    description: '把经营问题，变成可以验证、推进和复盘的工作。',
     images: [
       {
         url: '/og.png',
-        width: 1672,
-        height: 941,
-        alt: '简益咨询｜让经营判断、系统方案与项目执行站在同一张图上',
+        width: 1731,
+        height: 909,
+        alt: '简益主理人工作档案',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: '简益咨询｜让经营判断、系统方案与项目执行站在同一张图上',
-    description: '零售经营咨询、IT规划、项目管理与产品设计。',
+    title: '简益主理人工作档案',
+    description: '把经营问题，变成可以验证、推进和复盘的工作。',
     images: ['/og.png'],
   },
 };

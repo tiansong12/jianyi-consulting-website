@@ -31,5 +31,15 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    ".vinext",
+    "dist",
+    "output",
+    "outputs",
+    "tmp",
+    ".workbuddy",
+    "assets",
+    "internal"
+  ]
 }

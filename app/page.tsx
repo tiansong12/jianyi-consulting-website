@@ -1,660 +1,85 @@
-const moments = [
-  ['01', '经营动作失去焦点', '会议很多，销售、毛利、库存、效率等问题却没有被归入同一套优先级。', '建立问题地图，明确优先级、责任人与验证指标。', '问题地图 · 优先级 · 责任人'],
-  ['02', '系统建设反复返工', '业务说需求，IT 讲功能，供应商谈产品，三方缺少同一套业务定义。', '先写清流程、规则与边界，再进入选型、实施和验收。', '业务蓝图 · 需求分层 · 选型原则'],
-  ['03', '项目立项却难以推进', '计划存在，跨部门任务、数据准备、问题升级和决策机制没有真正运行。', '建立甲方项目管理机制，让责任、问题、变更和里程碑持续可见。', '甲方 PMO · 阶段门 · 验收机制'],
-  ['04', '经验无法被组织复用', '复杂业务依赖少数人解释，场景、状态、权限和数据没有形成可协作的定义。', '把经验转成流程、状态、权限、数据模型与可测试的产品定义。', '产品定义 · 数据模型 · 场景测试'],
-];
-
-const operatingModel = [
-  ['场', '门店与运营', '回答每家店卖了什么、还剩什么、损耗多少，以及接下来应该订什么、补什么、调整什么。', 'OPERATING CONTEXT'],
-  ['货', '商品与供应链', '把所有门店的销售和库存变化汇总成采购计划、到货计划、配送计划和仓储计划，让商品在正确的时间到达正确的门店。', 'SUPPLY & ASSORTMENT'],
-  ['人', '顾客与需求', '识别不同门店、不同区域和不同顾客的需求差异，进而支持选品、定价、促销和商品组合调整。', 'CUSTOMER NEEDS'],
-];
-
-const services = [
-  {
-    code: 'S01',
-    name: '零售经营与品类咨询',
-    decision: '我们应该先改什么，怎样判断调改是否有效？',
-    work: ['经营问题与数据诊断', '品类结构、角色与规则设计', 'KPI 与经营分析框架', '试点调改与复盘机制'],
-    output: '问题地图、品类方案、指标字典、试点计划、复盘模板',
-  },
-  {
-    code: 'S02',
-    name: 'IT 战略、规划与系统选型',
-    decision: '现有系统哪里不适配，新系统应该如何选、如何建？',
-    work: ['战略与业务能力解码', '核心流程与特殊场景梳理', '系统现状和风险评估', '业务蓝图、需求定义和选型支持'],
-    output: '业务蓝图、需求说明书、选型框架、项目范围、系统路线与验收原则',
-  },
-  {
-    code: 'S03',
-    name: 'ERP / WMS 实施与甲方 PMO',
-    decision: '怎样让业务、IT 与供应商按同一目标推进？',
-    work: ['总体计划与责任矩阵', '问题、风险和变更管理', '数据准备、测试和上线切换', '验收、复盘与能力转移'],
-    output: '项目计划、问题台账、决策记录、数据清单、切换方案和验收清单',
-  },
-  {
-    code: 'S04',
-    name: '业务产品与数据工具设计',
-    decision: '怎样把专业经验转成团队可以共同开发的产品？',
-    work: ['用户、角色与业务场景研究', '流程、状态和权限设计', 'PRD、数据模型与交互规则', '原型评审和场景测试'],
-    output: '业务架构、产品需求、数据模型、交互规范、原型和测试场景',
-  },
-];
-
-const method = [
-  ['01', '识别课题', '把现场现象转成管理层需要回答的问题。', '课题清单'],
-  ['02', '统一事实', '结合访谈、流程和数据建立共同认知。', '现状地图'],
-  ['03', '设计方案', '明确业务规则、目标流程和取舍原则。', '目标方案'],
-  ['04', '组织实施', '把方案拆成责任、任务、决策和验收。', '项目机制'],
-  ['05', '验证改进', '用经营动作、系统状态和指标持续复盘。', '改进闭环'],
-];
-
-const packages = [
-  {
-    level: 'P01',
-    name: '经营诊断与项目定义',
-    price: '¥28,000 起',
-    aim: '问题复杂，方向尚未统一',
-    scope: '关键访谈与资料诊断；问题地图与优先级；项目定义与行动建议。',
-    result: '一份可用于内部决策的项目定义。',
-  },
-  {
-    level: 'P02',
-    name: '专项咨询与方案设计',
-    price: '¥88,000 起',
-    aim: '课题明确，需要形成系统方案',
-    scope: '现状与目标模型；业务或系统方案设计；试点、指标与实施路径。',
-    result: '一套可以进入实施的业务方案。',
-    featured: true,
-  },
-  {
-    level: 'P03',
-    name: '实施陪跑与项目管理',
-    price: '¥168,000 起',
-    aim: '多部门、多供应商或关键上线项目',
-    scope: '计划、范围与风险管理；跨方协同与决策机制；测试验收与上线陪跑。',
-    result: '一套真正运行起来的项目机制。',
-  },
-];
-
-const caseTracks = [
-  {
-    track: '看得见',
-    en: 'VISIBILITY',
-    logic: '经营可见性',
-    lead: '先让门店的业务数据回到总部。数据不到位，经营讨论只能停留在经验层面。',
-    items: [
-      {
-        no: 'CASE 01 · 章一',
-        sector: '区域商贸零售集团 / 商超专柜业态',
-        title: '从月度盲区到 1 至 3 天可见',
-        challenge: '总部每月只看得到发了多少货、收了多少钱；门店卖了什么、还剩多少，要等一两个月甚至季度盘点才能倒推。',
-        knots: [
-          '同一件商品在系统里有三个身份：超市打称码、企业销售组合码、订货成分码，一个销售编码可能映射多个订货编码',
-          '八类真实场景无法只靠增加一个接口解决：供应商直送、门店退货、门店调拨、试吃报损、盘点盈亏、赠品只记数量、有库存无销售、外部有销售码内部找不到商品',
-        ],
-        moves: ['建立打称码、组合码、成分码的 1:N 映射关系', '门店销售数据直连自动回流，不再人工转述', '逐类场景定义谁发起、谁审核、谁执行，产生什么单据、库存如何变化'],
-        result: '经营可见性从一两个月缩短到 1 至 3 天，管理颗粒度下沉到打称码与品类；数据回流不再依赖人工报数与解释。',
-        facts: ['1 至 3 天可见', '编码 1:N 映射', '八类场景归位'],
-      },
-    ],
-  },
-  {
-    track: '算得清',
-    en: 'PROFIT',
-    logic: '业财一体',
-    lead: '数据回来之后，还要让每一笔业务都能算出结果。利润不是月末拼出来的，而是业务发生时生成的。',
-    items: [
-      {
-        no: 'CASE 01 · 章二',
-        sector: '同一客户纵深 / 门店利润表与成本核算',
-        title: '从回款大数到门店利润表',
-        challenge: '老板能看到钱回来了，却很难回答一家店到底赚了多少：收入在超市对账单，成本在商贸系统，费用散落在扣款明细、工资表和财务科目。',
-        knots: [
-          '专柜交易发生在超市的收银和称重体系里，企业内部没有一张能按门店、按日、按 SKU 识别收入的销售小票',
-          '连锁断点：没有小票就无法对应库存商品，无法对应库存就无法自动结转成本；没有收入与成本，门店利润就失去计算基础',
-          '商场扣费只出现在结算单，与门店日常经营数据相互分离；供应链与总部费用全部留在总部，门店利润看起来虚高',
-        ],
-        moves: ['销售数据按日导入生成企业内部收入小票', '调入单带成本、售出即结转，销售与成本落在同一经营期间', '盘点盈亏与商场扣费归集到门店，固定费用先计提后冲抵', '供应链按调入件数、总部按后台成本确定分摊规则'],
-        result: '每张业务单据按规则生成财务凭证，门店利润表每月 5 日出具；销售额高的门店未必贡献利润，经营质量第一次可以被比较。',
-        facts: ['四道连接', '每月 5 日出表', '门店级利润'],
-      },
-    ],
-  },
-  {
-    track: '调得动',
-    en: 'CATEGORY',
-    logic: '品类经营',
-    lead: '看得见、算得清之后，经营动作才有依据。把数据转成门店可以执行、可以复盘的调整。',
-    items: [
-      {
-        no: 'CASE 02',
-        sector: '区域连锁超市 / 门店经营',
-        title: '用一个门店试点，把品类方法变成团队共同语言',
-        challenge: '商品分类、品类角色和绩效指标缺少统一口径，调改经验停留在少数人手里，难以复制到门店日常经营。',
-        knots: [
-          '同一类商品在不同部门的分类口径不同，销售、毛利和库存无法放在同一张表里比较',
-          '调改动作与结果之间没有固定的复盘节奏，效果好坏说不清原因',
-        ],
-        moves: ['设计品类结构树和分类规则', '选择门店与功能分类开展试点', '建立 KPI、调改方案和双周复盘机制'],
-        result: '通过小范围试点，把分类、指标、动作和复盘连在一起，为后续验证与推广建立可重复的方法。',
-        facts: ['1 家试点门店', '2 个功能分类', '4 轮双周复盘'],
-      },
-    ],
-  },
-  {
-    track: '建得起',
-    en: 'SYSTEM',
-    logic: '系统落地',
-    lead: '经营规则要真正跑起来，最终要落到系统边界、产品定义与项目机制上。',
-    items: [
-      {
-        no: 'CASE 03',
-        sector: '商业综合体 / 总部与项目 IT 规划',
-        title: '把总部管理、项目运营与筹开需求放进一张蓝图',
-        challenge: '招商租赁、商户运营、物业、会员、预算、BI 与办公协同跨越总部和多个项目，系统边界复杂。',
-        knots: [
-          '总部要统一管理口径，项目要保留运营差异，两类需求在同一套系统里相互拉扯',
-          '筹开部署、培训、运维和验收常被排除在系统需求之外，上线后才临时补',
-        ],
-        moves: ['划分总部与项目能力边界', '梳理模块、审批权限和多项目管理', '把筹开部署、培训、运维和验收纳入需求'],
-        result: '形成覆盖管理、运营与筹开的系统需求框架，让系统建设围绕真实管理场景展开。',
-        facts: ['总部 / 项目双层', '筹开纳入需求'],
-      },
-      {
-        no: 'CASE 04',
-        sector: '复杂业务系统 / 产品设计',
-        title: '把专业流程转成可开发、可测试的产品定义',
-        challenge: '测试计划、项目、任务投放、实验执行、审核与报告相互关联，角色、状态和异常边界复杂。',
-        knots: [
-          '业务专家、设计、开发和测试对同一术语理解不同，需求停留在口头解释',
-          '异常场景没有定义，开发只能按正常路径实现，上线后不断返工',
-        ],
-        moves: ['统一术语、角色与端到端流程', '设计状态机、权限和数据模型', '用场景测试校验交互与异常规则'],
-        result: '让业务、设计、开发和测试围绕同一份产品定义协作，减少依赖口头解释的模糊空间。',
-        facts: ['状态机 + 权限模型', '场景测试'],
-      },
-    ],
-  },
-];
-
-const chapterOneScenes = [
-  '供应商直送门店',
-  '门店向仓库退货',
-  '门店之间调拨',
-  '商品试吃和报损',
-  '盘点产生的库存盈亏',
-  '赠品只记录数量',
-  '有库存却长期没有销售',
-  '外部有销售码、内部找不到商品',
-];
-
-const storyShifts = [
-  ['1 至 2 个月', '1 至 3 天'],
-  ['才能看到一个店级总数', '看到打称码与品类级明细'],
-  ['发了多少货 / 收了多少钱', '哪些商品好卖、哪些滞销，一目了然'],
-  ['季度盘点倒推盈亏', '门店订货、补货开始有数据依据'],
-  ['订货、补货、采购全凭经验', '总部采购与配送计划可提前编排'],
-];
-
-const storyLinks = [
-  ['1', '销售成票', '销售数据按日导入，形成企业自己的收入小票'],
-  ['2', '成本结转', '调入单带成本，售出即结转，库存成本同步减少'],
-  ['3', '损耗归集', '盘盈盘亏、报损与商场扣费归集到对应门店'],
-  ['4', '费用分摊', '供应链按调入件数、总部按后台成本分摊'],
-];
-
-const profitBreak = [
-  ['没有内部销售小票', '交易发生在超市收银体系，企业内部无法按门店、按日、按 SKU 识别收入'],
-  ['无法对应库存商品', '销售数量与库存商品对不上，成本不能随销售自动结转'],
-  ['利润失去计算基础', '收入与成本不在同一经营期间，门店盈亏只能靠月末人工拼凑'],
-];
-
-const vouchers = [
-  ['供应商收货', '应付账款 · 库存商品'],
-  ['门店销售', '应收账款 · 主营业务收入与成本 · 库存商品'],
-  ['盘点与库存调整', '库存商品 · 损益'],
-  ['收款与付款', '应收应付 · 银行现金'],
-  ['超市扣费', '销售费用 · 管理费用'],
-  ['门店之间调拨', '过渡科目保持两端库存一致'],
-];
-
-const gates = [
-  ['G0', '授权', '项目负责人、业务 Owner 与升级机制明确。'],
-  ['G1', '事实', '现状底稿、数据口径、系统联系人与关键约束确认。'],
-  ['G2', '范围', '试点场景、优先级、指标口径和资源边界冻结。'],
-  ['G3', '方案', '流程、规则、系统边界、数据与协同机制一致。'],
-  ['G4', '验证', '数据准备、测试、切换、培训与验收条件具备。'],
-  ['G5', '运营', '复盘、能力移交、扩面原则与持续改进节奏建立。'],
-];
-
-const topics = [
-  ['品类与生鲜经营', '分类、角色、价格、促销、陈列与库存，如何围绕同一经营目标协同？'],
-  ['业财协同', '业务发生、系统记录与财务核算，怎样从源头保持一致？'],
-  ['仓配效率与 WMS 深用', '不急着换系统，怎样先让货位、流程、参数和现场动作真正配合？'],
-  ['商业地产运营系统', '总部、项目与商户之间，哪些能力应该统一，哪些应该保留差异？'],
-  ['客户声音与经营改进', '如何把分散客诉变成问题聚类、责任闭环和经营复盘？'],
-  ['复杂业务产品设计', '如何把专业知识转成可协作、可开发、可测试的产品定义？'],
-];
-
-const coordination = [
-  ['甲方管理层', '明确经营目标、关键取舍、资源边界与决策节奏。', '把问题整理为管理议题，提供事实、方案和项目机制支持决策。'],
-  ['业务与运营团队', '提供现场事实，参与规则设计，落实试点、执行与复盘。', '让流程、指标、责任和动作形成共同语言，避免方案脱离现场。'],
-  ['IT 与技术供应商', '实现系统能力、集成、技术质量与运维支持。', '把经营和业务定义转成可验收的需求、边界、任务与协同机制。'],
-];
-
-const checklist = [
-  ['01', '最希望解决的三个问题。'],
-  ['02', '涉及的部门、业态、门店与系统。'],
-  ['03', '已有流程、报表、需求或问题清单。'],
-  ['04', '内部负责人和已知约束。'],
-];
+import Link from 'next/link';
+import { SiteFooter, SiteHeader } from '@/components/site-chrome';
+import { sortedWorks, topicDirectory } from '@/content/content';
 
 export default function Home() {
   return (
-    <main id="top">
-      <header className="site-header">
-        <a className="brand" href="#top" aria-label="简益咨询首页">
-          <span className="brand-mark">简</span>
-          <span className="brand-copy"><strong>简益咨询</strong><small>Jianyi Consulting</small></span>
-        </a>
-        <nav aria-label="主要导航">
-          <a href="#services">服务</a>
-          <a href="#cases">项目实践</a>
-          <a href="#story">主案例</a>
-          <a href="#method">工作方法</a>
-          <a href="#about">关于简益</a>
-          <a className="nav-cta" href="#whitepaper">下载白皮书</a>
-        </nav>
-      </header>
+    <main>
+      <SiteHeader />
 
-      <section className="hero">
-        <div className="hero-main">
-          <p className="eyebrow">JY DOSSIER · 01 / 经营 — 方案 — 执行</p>
-          <h1>让经营判断、系统方案与项目执行，站在同一张图上。</h1>
-          <p className="hero-lead">简益帮助零售企业看清复杂问题、形成可执行方案，并把方案带进跨部门协同、系统实施与经营现场。</p>
+      <section className="home-hero page-shell">
+        <div className="hero-copy">
+          <p className="eyebrow">JIAN YI · PRACTICE ARCHIVE · 2025—2026</p>
+          <h1>把经营问题，变成可以验证、推进和复盘的工作。</h1>
+          <p className="hero-lead">这里记录简益主理人在零售、数字化、系统建设与 AI 应用中的实践、方法与阶段性判断。</p>
           <div className="hero-actions">
-            <a className="button solid" href="#services">了解简益的服务</a>
-            <a className="button line" href="/downloads/简益咨询-产品与服务白皮书.pdf" download>下载服务白皮书</a>
+            <Link className="button button-solid" href="/work">沿时间线查看工作</Link>
+            <Link className="text-link" href="/methods">了解我的工作方法 <span aria-hidden="true">→</span></Link>
           </div>
         </div>
-        <aside className="hero-framework" aria-label="简益价值路径">
-          <p className="framework-label">OPERATING MAP / TRACE</p>
-          <h2>现象 → 规则 → 系统 → 行动</h2>
-          <div className="framework-steps">
-            <div><span>01</span><strong>证据 · EVIDENCE</strong><p>经营现象与事实底稿</p></div>
-            <div><span>02</span><strong>逻辑 · LOGIC</strong><p>业务规则与系统边界</p></div>
-            <div><span>03</span><strong>行动 · ACTION</strong><p>责任机制与验证复盘</p></div>
-          </div>
-          <p className="framework-note">站在甲方一侧，连接经营语言与系统语言，组织业务、IT 与供应商围绕同一份定义协同。</p>
+        <aside className="hero-timeline" aria-label="内容从工作发生时间开始">
+          <p>内容从工作发生时间开始</p>
+          <div><time>2025</time><i /><span>项目 · 蓝图</span></div>
+          <div><time>2026.05</time><i /><span>研究 · 数据</span></div>
+          <div><time>2026.07</time><i /><span>方案 · 试点</span></div>
+          <div><time>2026.08</time><i /><span>方法 · 观点</span></div>
+          <small>工作时间保持不变，认识可以持续修订。</small>
         </aside>
-        <div className="hero-sectors">
-          <span>服务场景</span><strong>连锁超市</strong><strong>商贸流通</strong><strong>购物中心</strong><strong>复杂业务系统</strong>
+      </section>
+
+      <section className="home-intro page-shell">
+        <p className="section-code">02 / 这是什么网站</p>
+        <div className="intro-grid">
+          <h2>一份持续更新的专业工作档案。</h2>
+          <p>它不罗列客户名单，也不把每份文件包装成成功案例。每项记录都尽量回答：当时面对什么问题，我承担什么角色，采取了哪些行动，形成了什么产出，以及证据能支持到哪里。</p>
         </div>
       </section>
 
-      <section className="section section-white" id="when">
-        <div className="section-intro two-col">
-          <div><p className="section-code">02 / WHEN TO CALL US</p><h2>问题复杂时，先形成共同判断。</h2></div>
-          <p>我们将可见的经营症状、项目阻力和组织约束放回同一张关系图，再进入方案与工具选择。</p>
-        </div>
-        <div className="moment-grid">
-          {moments.map(([no, title, symptom, answer, deliver]) => (
-            <article className="moment-card" key={no}>
-              <span className="outline-no">{no}</span>
-              <h3>{title}</h3>
-              <p>{symptom}</p>
-              <div>
-                <span>简益的切入点</span>
-                <strong>{answer}</strong>
-                <em>{deliver}</em>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section model-section" id="model">
-        <div className="section-intro two-col">
-          <div><p className="section-code">03 / OPERATING MODEL</p><h2>从人、货、场出发，回到真实的经营机制。</h2></div>
-          <p>现代零售经营至少需要三套能够协同运转的体系，它们必须建立在同一条数据链条上。</p>
-        </div>
-        <div className="model-grid">
-          {operatingModel.map(([key, name, desc, en]) => (
-            <article key={key}>
-              <span className="model-key">{key}</span>
-              <div>
-                <h3>{name}</h3>
-                <p>{desc}</p>
-                <em>{en}</em>
-              </div>
-            </article>
-          ))}
-        </div>
-        <p className="model-note">一次顾客购买应当形成一条可以被追踪的信息：商品在哪里卖出、卖出多少、使用什么编码、库存如何变化、是否需要补货、是否影响下一轮采购。</p>
-      </section>
-
-      <section className="section service-section" id="services">
-        <div className="section-intro two-col on-dark">
-          <div><p className="section-code">04 / WHAT WE DO</p><h2>把复杂工作，拆回正确层次。</h2></div>
-          <p>每项服务都从甲方需要回答的管理决策出发，明确关键工作与可被使用的阶段成果。</p>
-        </div>
-        <div className="service-matrix">
-          <div className="matrix-head"><span>服务</span><span>需要回答的决策</span><span>关键工作</span><span>客户获得</span></div>
-          {services.map((service) => (
-            <article className="service-row" key={service.code}>
-              <div className="service-name"><span>{service.code}</span><h3>{service.name}</h3></div>
-              <p className="service-question">{service.decision}</p>
-              <ul>{service.work.map((item) => <li key={item}>{item}</li>)}</ul>
-              <p className="service-output">{service.output}</p>
-            </article>
-          ))}
-        </div>
-        <div className="value-chain">
-          <div className="value-chain-title"><span>一条完整价值链</span><h3>服务不是四个孤立模块，而是一条从经营课题走向组织行动的路径。</h3></div>
-          <div className="chain-flow">
-            {['经营课题', '业务定义', 'IT / 产品方案', '项目实施', '经营机制'].map((item, index) => (
-              <div key={item}><span>0{index + 1}</span><strong>{item}</strong></div>
+      <section className="recent-section">
+        <div className="page-shell">
+          <div className="section-heading">
+            <div><p className="section-code">03 / 近期工作</p><h2>先从时间开始。</h2></div>
+            <Link className="text-link" href="/work">查看完整时间线 <span aria-hidden="true">→</span></Link>
+          </div>
+          <div className="work-preview-list">
+            {sortedWorks.slice(0, 3).map((work, index) => (
+              <Link className="work-preview" href={`/work/${work.slug}`} key={work.slug}>
+                <span className="work-index">{String(index + 1).padStart(2, '0')}</span>
+                <div className="work-meta"><time>{work.period}</time><span>{work.type}</span></div>
+                <div className="work-copy"><h3>{work.title}</h3><p>{work.summary}</p></div>
+                <span className="work-arrow" aria-hidden="true">↗</span>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="section section-white" id="method">
-        <div className="section-intro two-col">
-          <div><p className="section-code">05 / HOW WE WORK</p><h2>咨询的价值，在于把判断组织成行动。</h2></div>
-          <p>方法适用于经营改善、IT 规划、项目治理和复杂产品定义，每个项目会根据企业成熟度、约束条件与决策节奏进行裁剪。</p>
-        </div>
-        <div className="method-flow">
-          {method.map(([no, title, desc, output]) => (
-            <article key={no}><span>{no}</span><h3>{title}</h3><p>{desc}</p><strong>{output}</strong></article>
-          ))}
-        </div>
-        <p className="method-artifacts">每一步都留下可以继续使用的东西：经营问题地图、业务与数据蓝图，以及把责任、阶段门、验收和能力移交串起来的实施路线图。项目结束时，企业拿走的不只是报告，而是自己可以运行的机制。</p>
-      </section>
-
-      <section className="section" id="packages">
-        <div className="section-intro two-col">
-          <div><p className="section-code">06 / HOW TO ENGAGE</p><h2>按项目准备度，选择合适的进入方式。</h2></div>
-          <p>先确定问题、工作边界与验收标准，再讨论投入。以下为对外交流的参考起价。</p>
-        </div>
-        <div className="package-table">
-          {packages.map((item) => (
-            <article className={item.featured ? 'package featured' : 'package'} key={item.level}>
-              <div className="package-title"><span>{item.level}</span><h3>{item.name}</h3><strong>{item.price}</strong></div>
-              <div><span className="cell-label">适合解决</span><p>{item.aim}</p></div>
-              <div><span className="cell-label">主要范围</span><p>{item.scope}</p></div>
-              <div><span className="cell-label">客户获得</span><p>{item.result}</p></div>
-            </article>
-          ))}
-        </div>
-        <p className="pricing-note">以上为服务费参考起价，不含第三方软硬件、差旅和长期驻场成本；实际范围根据项目覆盖的业态、区域、门店、部门、系统数量、现场投入、数据条件和交付深度，在项目建议书中明确。</p>
-      </section>
-
-      <section className="section case-section" id="cases">
-        <div className="section-intro two-col">
-          <div><p className="section-code">07 / SELECTED WORK</p><h2>沿着零售经营主线，看四类代表性工作。</h2></div>
-          <p>案例按经营逻辑归类：先看得见，才算得清，再调得动，最终建得起。所有案例均已匿名处理，不呈现客户名称及可识别信息。</p>
-        </div>
-        {caseTracks.map((track) => (
-          <div className="track-group" key={track.track}>
-            <div className="track-head">
-              <span className="track-key">{track.track}</span>
-              <div>
-                <p className="track-en">{track.en} / {track.logic}</p>
-                <p className="track-lead">{track.lead}</p>
-              </div>
-            </div>
-            <div className="track-cases">
-              {track.items.map((item) => (
-                <article className="case-item" key={item.no}>
-                  <div className="case-heading">
-                    <span>{item.no}</span>
-                    <p>{item.sector}</p>
-                    <h3>{item.title}</h3>
-                  </div>
-                  <div className="case-detail">
-                    <div className="case-block"><span>客户课题</span><p>{item.challenge}</p></div>
-                    <div className="case-block case-knots"><span>现场卡点</span><ul>{item.knots.map((knot) => <li key={knot}>{knot}</li>)}</ul></div>
-                    <div className="case-block"><span>我们的做法</span><ul>{item.moves.map((move) => <li key={move}>{move}</li>)}</ul></div>
-                    <div className="case-block case-result"><span>工作成果</span><p>{item.result}</p></div>
-                  </div>
-                  {item.facts && <div className="case-facts">{item.facts.map((fact) => <strong key={fact}>{fact}</strong>)}</div>}
-                </article>
-              ))}
-            </div>
-          </div>
-        ))}
-        <p className="case-note">CASE 01 的两个课题来自同一家客户，是连续推进的两个阶段——完整过程见下一节。</p>
-      </section>
-
-      <section className="section story-section" id="story">
-        <div className="section-intro two-col">
-          <div><p className="section-code">08 / DEEP DIVE · CASE 01</p><h2>看不见的门店，算不清的利润。</h2></div>
-          <p>同一家区域商贸零售集团连续推进的两个阶段，也是商贸零售行业最普遍的两个共性问题。</p>
-        </div>
-
-        <div className="story-prologue">
-          <p className="story-kicker">序章 / PROLOGUE</p>
-          <h3>许多零售企业的经营，仍停留在“小农经济”阶段。</h3>
-          <p className="story-lead">小农经济靠经验先找货再卖货；现代零售靠数字化先理解顾客需求，再反向组织供应链、高效周转。</p>
-          <div className="prologue-grid">
-            <article>
-              <h4>小农经济 · 经验驱动</h4>
-              <ul>
-                <li>报数靠人、决策靠经验，信息靠人传人</li>
-                <li>系统割裂，编码不统一、数据不互通</li>
-                <li>先找货再卖货，形不成数字化流水线</li>
-              </ul>
-            </article>
-            <article>
-              <h4>现代零售 · 数据驱动</h4>
-              <ul>
-                <li>数字化识别顾客需求，反向驱动供应链</li>
-                <li>门店运营、顾客营销、供应链三大体系协同</li>
-                <li>财务核算贯穿，规模化降本、高效周转</li>
-              </ul>
-            </article>
-          </div>
-          <div className="story-pain">
-            <div><strong>看不见</strong><p>一两个月后才知道门店卖了什么、剩了什么</p></div>
-            <div><strong>算不清</strong><p>每家门店赚多少钱，靠季度盘点倒推</p></div>
-          </div>
-        </div>
-
-        <article className="story-chapter">
-          <div className="chapter-head">
-            <p className="story-kicker">章一 / VISIBILITY</p>
-            <h3>让数据自己流回总部。</h3>
-            <p className="chapter-lead">这看起来像一个数据采集问题。真正进入项目后，团队发现自己走进了一座编码迷宫。</p>
-          </div>
-          <div className="chapter-split">
-            <div className="chapter-pains">
-              <h4>三个卡点</h4>
-              <p><strong>订货靠经验</strong>哪些该补、补多少，店长凭感觉下单</p>
-              <p><strong>采购靠拍脑袋</strong>旺季备货量没有历史数据支撑</p>
-              <p><strong>盈亏靠盘点倒推</strong>季度甚至半年才知道一家店赚不赚钱</p>
-            </div>
-            <div className="chapter-break">
-              <p className="story-kicker">关键动作 / ACTIONS</p>
-              <h4>破解编码迷宫，接通数据链条。</h4>
-              <p>围绕“超市打称码 — 企业销售组合码 — 订货成分码”建立一对多映射，让外部门店销售转换成企业内部可用数据。</p>
-              <div className="break-steps">
-                <div><span>01</span><strong>三码合一</strong><p>打称码、组合码、成分码建立 1:N 映射</p></div>
-                <div><span>02</span><strong>数据直连</strong><p>门店销售数据自动采集传输，不再人工转述</p></div>
-                <div><span>03</span><strong>1 至 3 天可见</strong><p>从一两个月缩短，颗粒度细到打称码与品类</p></div>
-              </div>
-            </div>
-          </div>
-          <div className="scene-block">
-            <p className="story-kicker">真实场景 / REAL SCENES —— 无法只靠一个接口解决</p>
-            <div className="scene-grid">
-              {chapterOneScenes.map((scene) => (
-                <span key={scene}>{scene}</span>
-              ))}
-            </div>
-            <p className="scene-note">每一类业务都要重新回答：谁发起、谁审核、谁执行；产生什么单据；库存如何变化；出现异常以后由谁处理。</p>
-          </div>
-          <div className="story-shift">
-            <p className="story-kicker">转变 / TRANSFORMATION —— 管理颗粒度的质变</p>
-            <div className="shift-table">
-              <div className="shift-head"><span>BEFORE / 过去</span><span>AFTER / 现在</span></div>
-              {storyShifts.map(([before, after], index) => (
-                <div className="shift-row" key={index}>
-                  <p className="shift-before">{before}</p>
-                  <p className="shift-after">{after}</p>
-                </div>
-              ))}
-            </div>
-            <p className="story-conclusion">从“人管数字”到“数据支持人经营”，门店第一次被真正看见。</p>
-          </div>
-        </article>
-
-        <article className="story-chapter">
-          <div className="chapter-head">
-            <p className="story-kicker">章二 / PROFIT</p>
-            <h3>四道连接，算清每一家店。</h3>
-            <p className="chapter-lead">每个月结束后，老板都会问一个最基本的问题：这家门店，到底赚了多少钱？</p>
-          </div>
-          <div className="chapter-split">
-            <div className="chapter-pains">
-              <h4>难点藏在一张不存在的销售小票里</h4>
-              <p><strong>交易发生在别人的系统</strong>门店开在大型超市内，顾客购买发生在超市的收银和称重体系</p>
-              <p><strong>企业自己没有销售小票</strong>看不到按门店、按日、按 SKU 识别的收入，只知道发了多少货、收回多少钱</p>
-              <p><strong>利润失去计算基础</strong>无法把“商品卖出”这件事转换成自己的业务收入和销售成本</p>
-            </div>
-            <div className="chapter-break">
-              <p className="story-kicker">连锁断点 / CHAIN BREAK</p>
-              <h4>一环缺失，后面全部算不出来。</h4>
-              <div className="break-chain">
-                {profitBreak.map(([title, desc], index) => (
-                  <div key={title}><span>{index + 1}</span><strong>{title}</strong><p>{desc}</p></div>
-                ))}
-              </div>
-              <p className="chain-note">收入、成本和费用像几条各自流动的河流，缺少一套规则把它们汇入同一张门店利润表。</p>
-            </div>
-          </div>
-          <div className="link-block">
-            <p className="story-kicker">关键动作 / ACTIONS —— 四道连接</p>
-            <h4>让每一张业务单据说财务语言。</h4>
-            <p>门店经营利润 = 销售收入 − 销售成本 − 库存损耗 − 商场费用 − 供应链费用 − 总部费用。让每一项都有来源、时间、责任人和核算对象。</p>
-            <div className="link-flow">
-              {storyLinks.map(([no, name, desc]) => (
-                <div key={no}><span>{no}</span><strong>{name}</strong><p>{desc}</p></div>
-              ))}
-            </div>
-            <div className="link-result"><span>=</span><strong>门店利润表</strong><p>每月 5 日出具</p></div>
-          </div>
-          <div className="voucher-block">
-            <p className="story-kicker">业务单据 → 财务凭证 / VOUCHER MAPPING</p>
-            <div className="voucher-grid">
-              {vouchers.map(([doc, account]) => (
-                <div key={doc}><strong>{doc}</strong><span>{account}</span></div>
-              ))}
-            </div>
-            <p className="voucher-note">财务核算由此从“月末寻找数据”，逐步转向“业务发生时生成核算依据”。</p>
-          </div>
-          <p className="story-conclusion">销售额很高的门店，可能同时占用更多配送资源、承担更高商场扣费；毛利率不错的门店，也可能因为损耗或固定费用过高而没有真实利润——利润表开始揭示收入大数背后真正的经营质量。</p>
-        </article>
-
-        <div className="story-epilogue">
-          <p className="story-kicker">尾声 / EPILOGUE</p>
-          <h3>从人治到流程，从经验到数据。</h3>
-          <p>当门店的销售数据每天自动回流，当每家门店的利润表按时出具，经营决策便不再依赖某个人的经验与记忆，而是建立在可追溯、可复用的流程与数据之上。</p>
-          <strong>这不是终点，而是一家零售企业从“小农经济”走向工业化经营的起点。</strong>
+      <section className="home-bridge page-shell">
+        <p className="section-code">04 / 从记录到判断</p>
+        <div className="bridge-grid">
+          <Link href="/work"><span>工作记录</span><strong>发生过什么</strong><em>01</em></Link>
+          <Link href="/methods"><span>工作方法</span><strong>怎样处理问题</strong><em>02</em></Link>
+          <Link href="/views"><span>核心观点</span><strong>形成了什么判断</strong><em>03</em></Link>
         </div>
       </section>
 
-      <section className="section gate-section" id="gates">
-        <div className="section-intro two-col on-dark">
-          <div><p className="section-code">09 / PROGRAM GOVERNANCE</p><h2>项目需要被管理，不只被汇报。</h2></div>
-          <p>阶段门是资源投入许可与风险控制阀，避免把事实不清、范围蔓延和责任不明带入下一阶段。</p>
-        </div>
-        <div className="gate-flow">
-          {gates.map(([code, name, desc]) => (
-            <article key={code}>
-              <span>{code}</span>
-              <h3>{name}</h3>
-              <p>{desc}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section topic-section" id="topics">
-        <div className="section-intro two-col">
-          <div><p className="section-code">10 / QUESTIONS WE STUDY</p><h2>持续更新的，是判断框架。</h2></div>
-          <p>这些议题构成简益诊断、方案设计与项目复盘的长期知识框架，后续逐篇展开。</p>
+      <section className="topic-section page-shell">
+        <div className="section-heading">
+          <div><p className="section-code">05 / 专题地图</p><h2>真实工作逐渐形成的主题。</h2></div>
+          <p>专题不是预先搭好的知识框架，它们随着项目、研究和复盘逐步变得清晰。</p>
         </div>
         <div className="topic-grid">
-          {topics.map(([title, question], index) => (
-            <article key={title}><span>T0{index + 1}</span><h3>{title}</h3><p>{question}</p></article>
+          {topicDirectory.map((topic, index) => (
+            <Link href={`/work?topic=${encodeURIComponent(topic.label)}`} key={topic.label}>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <h3>{topic.label}</h3>
+              <p>{topic.description}</p>
+            </Link>
           ))}
         </div>
       </section>
 
-      <section className="about-section" id="about">
-        <div className="about-title">
-          <p className="section-code">11 / ABOUT JIANYI</p>
-          <h2>跨越现场、产品与项目，理解各方约束。</h2>
-        </div>
-        <div className="about-profile">
-          <p>简益核心顾问长期从事零售数字化与经营管理工作，职业经历覆盖中百集团、富基融通与有赞新零售。不同角色带来的共同认识是：技术进入经营流程、组织责任与日常动作之后，才会成为企业真正的管理能力。</p>
-          <div className="experience-line">
-            <span><strong>零售企业</strong>理解门店与总部的经营现场</span>
-            <span><strong>零售软件</strong>理解系统边界与实施约束</span>
-            <span><strong>新零售平台</strong>理解顾客、渠道与数据运营</span>
-          </div>
-        </div>
-      </section>
-
-      <section className="section section-white" id="coordination">
-        <div className="section-intro two-col">
-          <div><p className="section-code">12 / COORDINATION</p><h2>在关键连接处，承担应有角色。</h2></div>
-          <p>简益不替代任何一方，而是让各方的职责、交付与验收标准在同一张图上对齐。</p>
-        </div>
-        <div className="coordination-table">
-          <div className="coordination-head"><span>协同对象</span><span>主要职责</span><span>简益的工作位置</span></div>
-          {coordination.map(([party, duty, jianyi]) => (
-            <div className="coordination-row" key={party}>
-              <strong>{party}</strong>
-              <p>{duty}</p>
-              <p className="coordination-jy">{jianyi}</p>
-            </div>
-          ))}
-        </div>
-        <div className="role-frame">
-          <div><span>简益负责</span><p>诊断、框架、方案、项目组织、问题推动、验收设计与方法转移。</p></div>
-          <div><span>客户负责</span><p>明确负责人，开放必要信息，组织业务决策，完成约定的数据与现场动作。</p></div>
-          <div><span>共同确认</span><p>关键流程是否运行、责任是否清楚、系统与数据是否支持新的管理方式。</p></div>
-        </div>
-      </section>
-
-      <section className="whitepaper-section" id="whitepaper">
-        <div className="whitepaper-copy">
-          <p className="section-code">13 / START THE CONVERSATION</p>
-          <h2>带着一个明确的经营或项目问题，开启一次结构化讨论。</h2>
-          <div className="checklist">
-            <span>首次讨论准备</span>
-            {checklist.map(([no, item]) => (
-              <p key={no}><em>{no}</em>{item}</p>
-            ))}
-          </div>
-          <p className="whitepaper-lead">《简益咨询产品与服务白皮书》集中介绍服务矩阵、合作方案、代表项目、工作方法和启动清单，适合管理层内部讨论与项目立项沟通。</p>
-          <a className="button paper-button" href="/downloads/简益咨询-产品与服务白皮书.pdf" download>下载 PDF 白皮书 <span>↓</span></a>
-        </div>
-        <div className="paper-outline" aria-hidden="true">
-          <div className="paper-cover"><span>简益咨询 / 2026</span><strong>让经营判断、<br />系统方案与项目执行，<br />站在同一张图上。</strong><p>产品与服务白皮书</p></div>
-          <div className="paper-index"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span></div>
-        </div>
-      </section>
-
-      <footer>
-        <a className="brand footer-brand" href="#top"><span className="brand-mark inverse">简</span><span className="brand-copy"><strong>广州市简益信息技术有限公司</strong><small>Jianyi Consulting</small></span></a>
-        <p>零售经营咨询 · IT 规划 · 项目管理 · 产品设计</p>
-        <a href="#whitepaper">下载服务白皮书 ↑</a>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
