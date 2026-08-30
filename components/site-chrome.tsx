@@ -43,10 +43,27 @@ export function SiteFooter() {
           <Link href="/methods">工作方法</Link>
           <Link href="/views">核心观点</Link>
           <Link href="/cooperate">合作方式</Link>
+          <a href="/downloads/简益咨询-产品与服务白皮书.pdf" download>下载白皮书</a>
         </div>
         <p>持续记录，谨慎表达。</p>
       </div>
     </footer>
+  );
+}
+
+export function ArticleNextStep() {
+  return (
+    <aside className="article-next-step">
+      <div>
+        <span>下一步</span>
+        <h2>把这项工作放回你的具体问题。</h2>
+        <p>如果你的课题也跨越经营、流程、数据与系统，可以先确认问题、期望交付物和双方责任。</p>
+      </div>
+      <div>
+        <Link className="button button-solid" href="/cooperate">查看合作方式</Link>
+        <a className="text-link" href="/downloads/简益咨询-产品与服务白皮书.pdf" download>下载服务白皮书 ↓</a>
+      </div>
+    </aside>
   );
 }
 

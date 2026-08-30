@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArticleSection, BulletList } from '@/components/content-ui';
-import { SiteFooter, SiteHeader } from '@/components/site-chrome';
+import { ArticleNextStep, SiteFooter, SiteHeader } from '@/components/site-chrome';
 import { getMethod, getWork, methods } from '@/content/content';
 
 type MethodDetailProps = { params: Promise<{ slug: string }> };
@@ -49,6 +49,7 @@ export default async function MethodDetailPage({ params }: MethodDetailProps) {
           <span>支撑这项方法的工作记录</span>
           {evidence.map((work) => work && <Link href={`/work/${work.slug}`} key={work.slug}><time>{work.period}</time><strong>{work.title}</strong><em>→</em></Link>)}
         </aside>
+        <ArticleNextStep />
       </article>
       <SiteFooter />
     </main>

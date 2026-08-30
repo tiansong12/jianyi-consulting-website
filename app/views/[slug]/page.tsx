@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArticleSection, BulletList } from '@/components/content-ui';
-import { SiteFooter, SiteHeader } from '@/components/site-chrome';
+import { ArticleNextStep, SiteFooter, SiteHeader } from '@/components/site-chrome';
 import { getView, getWork, views } from '@/content/content';
 
 type ViewDetailProps = { params: Promise<{ slug: string }> };
@@ -60,6 +60,7 @@ export default async function ViewDetailPage({ params }: ViewDetailProps) {
           <span>形成这一观点的工作记录</span>
           {relatedWorks.map((work) => work && <Link href={`/work/${work.slug}`} key={work.slug}><time>{work.period}</time><strong>{work.title}</strong><em>→</em></Link>)}
         </aside>
+        <ArticleNextStep />
       </article>
       <SiteFooter />
     </main>

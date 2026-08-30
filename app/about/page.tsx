@@ -22,6 +22,12 @@ const boundaries = [
   '研究、教材、原型、方案与实际项目采用不同的成果表述。',
 ];
 
+const experienceViews = [
+  ['零售企业', '中百集团', '理解门店与总部的经营现场，以及管理动作如何落到一线。'],
+  ['零售软件', '富基融通', '理解系统能力、产品边界与复杂实施条件。'],
+  ['新零售平台', '有赞新零售', '理解顾客、渠道、交易和数据运营怎样连接。'],
+];
+
 export default function AboutPage() {
   return (
     <main>
@@ -29,18 +35,33 @@ export default function AboutPage() {
       <PageIntro
         code="04 / ABOUT"
         title="关于简益"
-        lead="简益是主理人整理实践、参与项目和持续形成专业判断的工作载体。这里首先是一份工作档案，其次才是一份公司介绍。"
+        lead="简益是零售企业复杂经营与数字化项目的甲方顾问，也是一份持续修订的专业工作档案。"
       />
 
       <section className="about-section page-shell">
         <div className="about-statement">
           <span>工作范围</span>
           <h2>零售经营、数字化、系统建设与复杂项目协同。</h2>
-          <p>我的工作通常发生在业务、管理和技术交界处：帮助团队看清问题，形成共同定义，把方案拆成可以推进和验收的工作，并在项目结束后回到经营结果复盘。</p>
+          <p>工作通常发生在业务、管理和技术交界处：帮助团队看清问题，形成共同定义，把方案拆成可以推进和验收的工作，并在项目结束后回到经营结果复盘。</p>
+        </div>
+
+        <div className="experience-section">
+          <div><p className="section-code">01 / 经历视角</p><h2>从经营现场、软件系统和新零售平台看同一件事。</h2></div>
+          <p className="experience-lead">核心顾问的职业经历覆盖零售企业、零售软件与新零售平台。三个角色带来的共同认识是：技术进入经营流程、组织责任与日常动作之后，才会成为企业真正的管理能力。</p>
+          <div className="experience-grid">
+            {experienceViews.map(([view, company, body], index) => (
+              <article key={view}>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <p>{view}</p>
+                <h3>{company}</h3>
+                <small>{body}</small>
+              </article>
+            ))}
+          </div>
         </div>
 
         <div className="principle-section">
-          <p className="section-code">01 / 工作原则</p>
+          <p className="section-code">02 / 工作原则</p>
           <div className="principle-grid">
             {principles.map(([title, body], index) => (
               <article key={title}><span>{String(index + 1).padStart(2, '0')}</span><h3>{title}</h3><p>{body}</p></article>
@@ -49,7 +70,7 @@ export default function AboutPage() {
         </div>
 
         <div className="boundary-section">
-          <div><p className="section-code">02 / 能力边界</p><h2>清楚说明不做什么，也是一种专业责任。</h2></div>
+          <div><p className="section-code">03 / 能力边界</p><h2>清楚说明不做什么，也是一种专业责任。</h2></div>
           <ul>{boundaries.map((item) => <li key={item}>{item}</li>)}</ul>
         </div>
 

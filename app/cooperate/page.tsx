@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { PageIntro, SiteFooter, SiteHeader } from '@/components/site-chrome';
 
 export const metadata: Metadata = {
@@ -10,31 +9,27 @@ export const metadata: Metadata = {
 const offers = [
   {
     no: '01',
-    title: '经营与数字化诊断',
+    title: '经营诊断与项目定义',
+    price: '¥28,000 起',
     question: '问题很多，但不知道应该从哪里开始。',
     work: ['关键角色访谈与资料检查', '经营、流程、数据和系统问题地图', '优先级、依赖关系与下一步建议'],
     output: '形成一份可用于内部决策的事实底稿和问题定义。',
   },
   {
     no: '02',
-    title: '业务蓝图与系统规划',
-    question: '业务、IT 和供应商对需求的理解不一致。',
-    work: ['现状与例外场景梳理', '目标流程、角色、数据和系统边界', '阶段范围、选型条件和验收原则'],
-    output: '形成可以进入选型、产品设计或实施的共同定义。',
+    title: '专项咨询与方案设计',
+    price: '¥88,000 起',
+    question: '已经明确一个经营、流程或系统课题，需要形成可实施方案。',
+    work: ['专项调研与数据分析', '业务规则、目标流程和系统边界', '实施路径、关键模板和验收原则'],
+    output: '形成一套可以进入实施的业务方案。',
   },
   {
     no: '03',
-    title: '项目陪跑与甲方项目管理',
+    title: '实施陪跑与项目管理',
+    price: '¥168,000 起',
     question: '方案已经确定，但跨部门和供应商协同难以推进。',
     work: ['总体计划、责任与阶段门', '问题、风险、变更和决策管理', '数据准备、测试、切换、验收与复盘'],
     output: '让项目状态、关键依赖和下一步行动持续可见。',
-  },
-  {
-    no: '04',
-    title: '培训与专业内容研究',
-    question: '需要把复杂实践讲清楚，并保留事实和证据边界。',
-    work: ['案例与来源材料整理', '问题、冲突、机制和观点提炼', '文章、讲稿、课程与演示材料设计'],
-    output: '形成管理者能够理解、讨论和继续使用的内容。',
   },
 ];
 
@@ -45,20 +40,22 @@ export default function CooperatePage() {
       <PageIntro
         code="05 / COOPERATE"
         title="合作方式"
-        lead="先确认要解决的问题、需要形成的交付物和双方责任，再讨论投入与安排。这里不设置脱离具体课题的标准价格。"
+        lead="先确认要解决的问题、需要形成的交付物和双方责任，再判断从诊断、专项方案还是实施陪跑进入。"
       />
 
       <section className="cooperate-section page-shell">
         <div className="offer-list">
           {offers.map((offer) => (
             <article className="offer" key={offer.no}>
-              <div className="offer-title"><span>{offer.no}</span><h2>{offer.title}</h2></div>
+              <div className="offer-title"><span>{offer.no}</span><h2>{offer.title}</h2><strong>{offer.price}</strong></div>
               <p className="offer-question">{offer.question}</p>
               <ul>{offer.work.map((item) => <li key={item}>{item}</li>)}</ul>
               <div className="offer-output"><span>形成什么</span><p>{offer.output}</p></div>
             </article>
           ))}
         </div>
+
+        <p className="pricing-note">参考起价用于判断预算量级，不含第三方软硬件、差旅和长期驻场成本；多业态、多组织或定制开发项目单独确认。培训与专业内容研究按具体课题另行定义。</p>
 
         <div className="conversation-box">
           <div><p className="section-code">开始讨论前</p><h2>准备四项信息，就足够开始。</h2></div>
@@ -68,10 +65,13 @@ export default function CooperatePage() {
             <li><span>03</span><p>已有流程、报表、需求或问题清单。</p></li>
             <li><span>04</span><p>内部负责人、决策方式和已知约束。</p></li>
           </ol>
-          <p className="conversation-note">第一次沟通的目标是判断问题是否清楚、是否适合由简益参与，以及下一步应该先补什么信息。具体联系方式沿用双方已经建立的沟通渠道。</p>
+          <p className="conversation-note">第一次沟通的目标是判断问题是否清楚、是否适合由简益参与，以及下一步应该先补什么信息。你可以通过收到本页的原沟通渠道发送以上四项信息；面向新访客的公开联系入口确认后会在这里补充。</p>
         </div>
 
-        <div className="cooperate-links"><Link className="button button-solid" href="/work">先看工作记录</Link><Link className="text-link" href="/methods">了解工作方法 →</Link></div>
+        <div className="cooperate-resource">
+          <div><span>可转发资料</span><h2>用一份白皮书，完成第一次内部判断。</h2><p>集中了解服务矩阵、合作方案、代表实践、工作方法和启动清单，适合管理层内部讨论与项目立项沟通。</p></div>
+          <a className="button button-solid" href="/downloads/简益咨询-产品与服务白皮书.pdf" download>下载 PDF 白皮书</a>
+        </div>
       </section>
       <SiteFooter />
     </main>

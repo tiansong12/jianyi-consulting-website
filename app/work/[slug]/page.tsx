@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArticleSection, BulletList } from '@/components/content-ui';
-import { SiteFooter, SiteHeader } from '@/components/site-chrome';
+import { ArticleNextStep, SiteFooter, SiteHeader } from '@/components/site-chrome';
 import { getMethod, getView, getWork, works } from '@/content/content';
 
 type WorkDetailProps = { params: Promise<{ slug: string }> };
@@ -67,6 +67,7 @@ export default async function WorkDetailPage({ params }: WorkDetailProps) {
             {relatedViews.map((view) => view && <Link href={`/views/${view.slug}`} key={view.slug}>{view.title} →</Link>)}
           </div>
         </aside>
+        <ArticleNextStep />
       </article>
       <SiteFooter />
     </main>

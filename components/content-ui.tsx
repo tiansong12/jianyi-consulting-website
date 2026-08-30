@@ -15,7 +15,6 @@ export function WorkListItem({ work, index }: { work: WorkEntry; index: number }
         <p>{work.summary}</p>
         <div className="node-judgement"><span>核心判断</span><p>{work.reflection}</p></div>
         <div className="tag-row">{work.topics.map((topic) => <span key={topic}>{topic}</span>)}</div>
-        <small className="public-boundary">公开边界：{work.boundaries[0]}</small>
       </div>
     </Link>
   );

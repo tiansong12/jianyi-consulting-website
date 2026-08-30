@@ -14,6 +14,7 @@ const forbiddenPatterns = [
   { label: '公开价格', regex: /[¥￥]\s?\d[\d,.]*/g },
   { label: '敏感经营数字单位', regex: /\d+(?:\.\d+)?\s*(?:%|万元|亿元|倍)/g },
 ];
+const approvedPublicPrices = new Set(['¥28,000', '¥88,000', '¥168,000']);
 
 async function collectFiles(path) {
   const info = await stat(path).catch(() => null);
@@ -34,8 +35,12 @@ for (const file of files) {
   }
   for (const pattern of forbiddenPatterns) {
     if (pattern.label === '敏感经营数字单位' && !file.startsWith('content/')) continue;
-    const matches = text.match(pattern.regex);
-    if (matches?.length) failures.push(`${file}: ${pattern.label}「${matches[0]}」`);
+    const matches = text.match(pattern.regex) ?? [];
+    for (const match of matches) {
+      const isApprovedPrice = pattern.label === '公开价格'
+        && approvedPublicPrices.has(match);
+      if (!isApprovedPrice) failures.push(`${file}: ${pattern.label}「${match}」`);
+    }
   }
 }
 
@@ -44,4 +49,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`公开内容检查通过：${files.length} 个文本文件未发现禁止名称、个人信息、价格或敏感经营数字。`);
+console.log(`公开内容检查通过：${files.length} 个文本文件未发现禁止名称、个人信息、未批准价格或敏感经营数字。`);
