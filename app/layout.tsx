@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://jianyi-practice-archive.wwsong999.chatgpt.site'),
   title: '简益主理人工作档案',
   description: '零售企业复杂经营与数字化项目的甲方顾问，记录项目实践、工作方法与阶段性判断。',
   openGraph: {
