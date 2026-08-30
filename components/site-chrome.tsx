@@ -11,7 +11,7 @@ const navigation = [
 ] as const;
 
 export function SiteHeader() {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? '/';
   return (
     <header className="site-header">
       <Link className="brand" href="/" aria-label="简益首页">
